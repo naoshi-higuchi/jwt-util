@@ -1,2 +1,2 @@
 # jwt-util
-jwt utility cli tool.
+JWT utility CLI tool.
