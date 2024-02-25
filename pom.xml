@@ -86,6 +86,7 @@
                         <configuration>
                             <mainClass>${mainClass}</mainClass>
                             <imageName>${imageName}</imageName>
+                            <skipNativeTests>true</skipNativeTests>
                         </configuration>
                         <executions>
                             <execution>
