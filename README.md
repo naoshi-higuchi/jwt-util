@@ -17,17 +17,23 @@ $ jwt-util --help
 
 ### Decode
 
+```
 $ jwt-util decode <jwtPath>
 
 $ jwt-util decode <jwtPath> --payload-only
 
 $ jwt-util decode ./jwt --header-only
+```
 
 ### Encode
 
+```
 $ jwt-util encode --payload <payloadPath> --key <keyPath> --algorithm <algorithm>
 
 $ jwt-util encode --payload ./payload.json --key private.pem --algorithm RS256 --header '{"foo":"bar"}'
+```
+
+`typ` and `alg` are added to the header automatically.
 
 ### ToDo
 
