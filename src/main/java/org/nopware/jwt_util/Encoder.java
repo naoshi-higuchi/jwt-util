@@ -3,9 +3,6 @@ package org.nopware.jwt_util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.*;
-import com.auth0.jwt.interfaces.DecodedJWT;
-
 import java.util.Optional;
 
 public class Encoder {

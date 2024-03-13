@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AlgorithmsTest {
 
     @Test
-    void forSigning() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    void forSigningRS256() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         try (InputStream inputStream = Resources.getResource("rsa-private.pem").openStream()) {
             byte[] keyInPem = KeyUtil.readPemObject(inputStream);
             Algorithm algorithm = Algorithms.forSigning(Alg.RS256, keyInPem);
@@ -23,10 +23,28 @@ class AlgorithmsTest {
     }
 
     @Test
-    void forVerifying() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    void forVerifyingRS256() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         try (InputStream inputStream = Resources.getResource("rsa-public.pem").openStream()) {
             byte[] keyInPem = KeyUtil.readPemObject(inputStream);
             Algorithm algorithm = Algorithms.forVerifying(Alg.RS256, keyInPem);
+            assertNotNull(algorithm);
+        }
+    }
+
+    @Test
+    void forSigningES256() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        try (InputStream inputStream = Resources.getResource("ec256-key-pair.pem").openStream()) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            Algorithm algorithm = Algorithms.forSigning(Alg.ES256, keyInPem);
+            assertNotNull(algorithm);
+        }
+    }
+
+    @Test
+    void forVerifyingES256() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        try (InputStream inputStream = Resources.getResource("ec256-public.pem").openStream()) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            Algorithm algorithm = Algorithms.forVerifying(Alg.ES256, keyInPem);
             assertNotNull(algorithm);
         }
     }

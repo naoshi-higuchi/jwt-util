@@ -36,7 +36,7 @@ class KeyUtilTest {
             assertNotNull(rsaPrivateKey);
             assertEquals("RSA", rsaPrivateKey.getAlgorithm());
             assertEquals("PKCS#8", rsaPrivateKey.getFormat());
-            assertEquals(1024, rsaPrivateKey.getModulus().bitLength());
+            assertEquals(2048, rsaPrivateKey.getModulus().bitLength());
         } catch (Exception e) {
             fail(e);
         }
@@ -50,7 +50,7 @@ class KeyUtilTest {
             assertNotNull(rsaPublicKey);
             assertEquals("RSA", rsaPublicKey.getAlgorithm());
             assertEquals("X.509", rsaPublicKey.getFormat());
-            assertEquals(1024, rsaPublicKey.getModulus().bitLength());
+            assertEquals(2048, rsaPublicKey.getModulus().bitLength());
         } catch (Exception e) {
             fail(e);
         }
@@ -66,5 +66,25 @@ class KeyUtilTest {
          * Testing randomness is hard.
          */
         System.out.println("Random: " + Arrays.toString(bytes));
+    }
+
+    @Test
+    void readECPrivateKey() {
+        try (InputStream inputStream = getResource("ec256-key-pair.pem")) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            KeyUtil.readECPrivateKey(keyInPem);
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
+    void readECPublicKey() {
+        try (InputStream inputStream = getResource("ec256-public.pem")) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            KeyUtil.readECPublicKey(keyInPem);
+        } catch (Exception e) {
+            fail(e);
+        }
     }
 }
