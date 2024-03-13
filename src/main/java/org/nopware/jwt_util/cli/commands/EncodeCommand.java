@@ -47,13 +47,12 @@ public class EncodeCommand implements Callable<Integer> {
 
             String payload = IOUtil.readStringFromFileOrStdin(payloadPath);
 
-            String keyString = Files.readString(key);
-            byte[] keyInPem = KeyUtil.readPemObject(keyString);
-            Algorithm algorithm = Algorithms.forSigning(alg, keyInPem);
+            byte[] keyOrSecret = KeyUtil.readKeyOrSecret(alg, key);
+            Algorithm algorithm = Algorithms.forSigning(alg, keyOrSecret);
             String encode = Encoder.encode(Optional.ofNullable(header), payload, algorithm);
             System.out.write(encode.getBytes());
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            //log.error("Error encoding token", e);
+            e.printStackTrace();
             return 1;
         }
 

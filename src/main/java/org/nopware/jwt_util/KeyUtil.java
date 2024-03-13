@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.ECPrivateKey;
@@ -21,6 +23,20 @@ import java.util.Random;
 
 public class KeyUtil {
     private static final Random fRandom = new Random();
+
+    public static byte[] readKeyOrSecret(Alg alg, Path keyOrSecretFile) throws IOException {
+        switch (alg) {
+            case HS256, HS384, HS512 -> {
+                return Files.readAllBytes(keyOrSecretFile);
+            }
+            case RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512 -> {
+                try (InputStream inputStream = Files.newInputStream(keyOrSecretFile)) {
+                    return readPemObject(inputStream);
+                }
+            }
+            default -> throw new IllegalArgumentException("Unsupported algorithm: " + alg);
+        }
+    }
 
     /**
      * Reads a PEM object from input stream.
