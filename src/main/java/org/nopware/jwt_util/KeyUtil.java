@@ -24,6 +24,9 @@ import java.util.Random;
 public class KeyUtil {
     private static final Random fRandom = new Random();
 
+    static final String EXMSG_NO_PEM_OBJECT_FOUND = "No PEM object found";
+    static final String EXMSG_UNSUPPORTED_ALGORITHM = "Unsupported algorithm: ";
+
     /**
      * Reads a key or secret from a file.
      *
@@ -43,7 +46,7 @@ public class KeyUtil {
                     return readPemObject(inputStream);
                 }
             }
-            default -> throw new IllegalArgumentException("Unsupported algorithm: " + alg);
+            default -> throw new IllegalArgumentException(EXMSG_UNSUPPORTED_ALGORITHM + alg);
         }
     }
 
@@ -60,7 +63,7 @@ public class KeyUtil {
         try (PemReader pemReader = new PemReader(new InputStreamReader(inputStream, Charsets.US_ASCII))) {
             PemObject pemObject = pemReader.readPemObject();
             if (pemObject == null) {
-                throw new IOException("No PEM object found");
+                throw new IOException(EXMSG_NO_PEM_OBJECT_FOUND);
             }
             return pemObject.getContent();
         }

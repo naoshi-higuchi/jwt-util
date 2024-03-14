@@ -7,6 +7,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,25 +36,27 @@ class IOUtilTest {
 
     @Test
     public void readAllBytesFromFileOrStdinWithNullPath() throws IOException {
+        final InputStream stdin = System.in;
         final String EXPECTED = "readAllBytesFromFileOrStdinWithNullPath";
         try (ByteArrayInputStream in = new ByteArrayInputStream(EXPECTED.getBytes());) {
             System.setIn(in);
             byte[] bytes = IOUtil.readAllBytesFromFileOrStdin(null); // null path
             assertThat(bytes).isEqualTo(EXPECTED.getBytes());
         } finally {
-            System.setIn(System.in);
+            System.setIn(stdin);
         }
     }
 
     @Test
     public void readAllBytesFromFileOrStdinWithDashPath() throws IOException {
+        final InputStream stdin = System.in;
         final String EXPECTED = "readAllBytesFromFileOrStdinWithDashPath";
         try (ByteArrayInputStream in = new ByteArrayInputStream(EXPECTED.getBytes());) {
             System.setIn(in);
             byte[] bytes = IOUtil.readAllBytesFromFileOrStdin(Paths.get("-")); // "-" path
             assertThat(bytes).isEqualTo(EXPECTED.getBytes());
         } finally {
-            System.setIn(System.in);
+            System.setIn(stdin);
         }
     }
 

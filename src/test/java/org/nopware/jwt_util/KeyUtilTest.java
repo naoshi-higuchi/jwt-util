@@ -36,6 +36,7 @@ class KeyUtilTest {
                 fail("Expected input stream to be closed");
             } catch (IOException e) {
                 // expected
+                System.out.println(e.getMessage());
             }
         } catch (IOException e) {
             fail(e);
@@ -135,6 +136,8 @@ class KeyUtilTest {
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // expected
+            assertThat(e.getMessage()).startsWith(KeyUtil.EXMSG_UNSUPPORTED_ALGORITHM);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -145,7 +148,8 @@ class KeyUtilTest {
             fail("Expected IllegalArgumentException");
         } catch (IOException e) {
             // expected
-            e.printStackTrace();
+            assertThat(e.getMessage()).isEqualTo("No PEM object found");
+            System.out.println(e.getMessage());
         }
     }
 }
