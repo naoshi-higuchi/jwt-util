@@ -18,6 +18,6 @@ public class CommandLineParser {
     @Option(names = {"-v", "--version"}, versionHelp = true, description = "Print version information and exit.")
     private boolean versionHelpRequested;
 
-    @Option(names = {"--auto-completion-script"}, description = "Output auto-completion script for the specified shell.")
+    @Option(names = {"--auto-completion-script"}, description = "Output auto-completion script for bash and exit.")
     private boolean autoCompletionScriptRequested;
 }
