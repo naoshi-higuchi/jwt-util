@@ -24,7 +24,16 @@ import java.util.Random;
 public class KeyUtil {
     private static final Random fRandom = new Random();
 
-    public static byte[] readKeyOrSecret(Alg alg, Path keyOrSecretFile) throws IOException {
+    /**
+     * Reads a key or secret from a file.
+     *
+     * @param alg the algorithm
+     * @param keyOrSecretFile the file containing the key or secret
+     * @return the key or secret
+     * @throws IOException if the file cannot be read, or if the key should be in PEM format and cannot be parsed
+     * @throws IllegalArgumentException if the algorithm is Alg.NONE.
+     */
+    public static byte[] readKeyOrSecret(Alg alg, Path keyOrSecretFile) throws IOException, IllegalArgumentException {
         switch (alg) {
             case HS256, HS384, HS512 -> {
                 return Files.readAllBytes(keyOrSecretFile);
@@ -41,7 +50,7 @@ public class KeyUtil {
     /**
      * Reads a PEM object from input stream.
      *
-     * <p>This method does not close the input stream.
+     * <p>This method close the input stream.
      *
      * @param inputStream the input stream.
      * @return the content of the PEM object
@@ -50,6 +59,9 @@ public class KeyUtil {
     public static byte[] readPemObject(InputStream inputStream) throws IOException {
         try (PemReader pemReader = new PemReader(new InputStreamReader(inputStream, Charsets.US_ASCII))) {
             PemObject pemObject = pemReader.readPemObject();
+            if (pemObject == null) {
+                throw new IOException("No PEM object found");
+            }
             return pemObject.getContent();
         }
     }

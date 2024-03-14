@@ -11,15 +11,20 @@ public class IOUtil {
     /**
      * Reads a string from a file or stdin.
      *
-     * @param path the path to the file, or null to read from stdin
+     * @param path the path to the file, or null to read from stdin, or "-" to read from stdin.
      * @return the string read from the file or stdin
      * @throws IOException if the file or stdin cannot be read
      */
     public static String readStringFromFileOrStdin(@Nullable Path path) throws IOException {
-        if (path != null) {
-            return Files.readString(path);
+        byte[] bytes = readAllBytesFromFileOrStdin(path);
+        return new String(bytes, Charsets.UTF_8);
+    }
+
+    public static byte[] readAllBytesFromFileOrStdin(@Nullable Path path) throws IOException {
+        if (path == null || path.toString().equals("-")) {
+            return System.in.readAllBytes();
         } else {
-            return new String(System.in.readAllBytes(), Charsets.US_ASCII);
+            return Files.readAllBytes(path);
         }
     }
 
