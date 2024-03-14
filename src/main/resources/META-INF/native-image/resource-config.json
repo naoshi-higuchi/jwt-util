@@ -4,6 +4,8 @@
     "pattern":"\\QMETA-INF/services/java.lang.System$LoggerFinder\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
+  }, {
+    "pattern": ".*\\.properties"
   }]},
   "bundles":[]
 }
