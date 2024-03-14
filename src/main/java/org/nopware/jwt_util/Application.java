@@ -5,15 +5,19 @@ import picocli.CommandLine;
 
 public class Application {
 
-    public static void main(String[] args) {
+    static int execute(String[] args) {
         CommandLine commandLine = new CommandLine(new CommandLineParser());
 
         if (args.length == 0) {
             commandLine.usage(System.out);
-            System.exit(1);
+            return 1;
         }
 
-        int exitCode = commandLine.execute(args);
+        return commandLine.execute(args);
+    }
+
+    public static void main(String[] args) {
+        int exitCode = execute(args);
         System.exit(exitCode);
     }
 }
