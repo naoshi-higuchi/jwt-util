@@ -26,6 +26,8 @@ import java.util.concurrent.Callable;
 public class VerifyCommand implements Callable<Integer> {
 
     public static final String MSG_VALID = "OK";
+    public static final String MSG_INVALID = "INVALID: ";
+    public static final String EXMSG_FAILED_TO_READ_JWT = "Failed to read JWT file: ";
 
     @Value
     @Builder
@@ -63,11 +65,13 @@ public class VerifyCommand implements Callable<Integer> {
                 DecodedJWT ignore = Decoder.verify(jwt, algorithm);
                 System.out.println(MSG_VALID);
             } catch (JWTVerificationException e) {
-                log.error("JWT verification failed.", e);
+                System.out.println(MSG_INVALID + e.getMessage());
+                log.debug("Failed to verify JWT.", e);
                 return CommandLine.ExitCode.SOFTWARE;
             }
         } catch (IOException e) {
-            log.error("Error reading JWT file.", e);
+            System.out.println(EXMSG_FAILED_TO_READ_JWT + e.getMessage());
+            log.debug("Failed to read JWT file.", e);
             return CommandLine.ExitCode.SOFTWARE;
         }
 

@@ -1,6 +1,7 @@
 package org.nopware.jwt_util;
 
 import com.google.common.io.Resources;
+import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.nopware.jwt_util.cli.commands.VerifyCommand;
@@ -29,6 +30,7 @@ class ApplicationTest {
      */
     private final String JWT_HS256 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
     private final String SECRET_HS256 = "your-256-bit-secret";
+    private final String SECRET_HS256_INVALID = "your-256-bit-secret-invalid";
 
     @Test
     void encodeWithRS256(@TempDir Path tmpDir) throws IOException, URISyntaxException {
@@ -98,38 +100,51 @@ class ApplicationTest {
         System.out.println(decoded);
     }
 
-    @Test
-    void verifyWithHS256(@TempDir Path tmpDir) throws IOException, URISyntaxException {
-        verifyAndTest(tmpDir, JWT_HS256);
+    @Value
+    static class ExitCodeAndOutput {
+        int exitCode;
+        String output;
     }
 
-    void verifyAndTest(Path tmpDir, String jwt) throws IOException {
+    @Test
+    void verifyWithHS256(@TempDir Path tmpDir) throws IOException, URISyntaxException {
+        ExitCodeAndOutput exitCodeAndOutput = verifyAndTest(tmpDir, JWT_HS256, SECRET_HS256.getBytes());
+        assertThat(exitCodeAndOutput.getExitCode()).isEqualTo(0);
+        assertThat(exitCodeAndOutput.getOutput()).isEqualTo(VerifyCommand.MSG_VALID + System.lineSeparator());
+    }
+
+    @Test
+    void verifyWithHS256Invalid(@TempDir Path tmpDir) throws IOException, URISyntaxException {
+        ExitCodeAndOutput exitCodeAndOutput = verifyAndTest(tmpDir, JWT_HS256, SECRET_HS256_INVALID.getBytes());
+        assertThat(exitCodeAndOutput.getExitCode()).isEqualTo(1);
+        assertThat(exitCodeAndOutput.getOutput()).startsWith(VerifyCommand.MSG_INVALID);
+    }
+
+    ExitCodeAndOutput verifyAndTest(Path tmpDir, String jwt, byte[] keyOrSecret) throws IOException {
         Path jwtFile = tmpDir.resolve("jwt");
         Files.writeString(jwtFile, jwt);
 
         Path keyOrSecretFile = tmpDir.resolve("keyOrSecret");
-        Files.write(keyOrSecretFile, SECRET_HS256.getBytes());
+        Files.write(keyOrSecretFile, keyOrSecret);
 
         ByteArrayOutputStream captor = new ByteArrayOutputStream();
         PrintStream standardOut = System.out;
 
+        int exit;
+
         try {
             System.setOut(new PrintStream(captor));
 
-            int exit = Application.execute(new String[]{
+            exit = Application.execute(new String[]{
                     "verify",
                     "--key", keyOrSecretFile.toString(),
                     jwtFile.toString()
             });
-
-            assertThat(exit).isEqualTo(0);
         } finally {
             System.setOut(standardOut);
         }
 
-        String verified = captor.toString();
-        assertThat(verified).isNotEmpty();
-        assertThat(verified).isEqualTo(VerifyCommand.MSG_VALID + System.lineSeparator());
-        System.out.println(verified);
+        String output = captor.toString();
+        return new ExitCodeAndOutput(exit, output);
     }
 }
