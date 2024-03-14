@@ -1,7 +1,6 @@
 package org.nopware.jwt_util;
 
 import com.google.common.io.Resources;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -9,13 +8,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ApplicationTest {
 
@@ -26,29 +23,40 @@ class ApplicationTest {
             }
             """;
 
+    /**
+     * A JWT data from <a href="https://jwt.io/">jwt.io</a>
+     */
+    private final String JWT_HS256 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
     @Test
     void encodeWithRS256(@TempDir Path tmpDir) throws IOException, URISyntaxException {
-        Path tmpFile = tmpDir.resolve("claims.json");
-        Files.writeString(tmpFile, CLAIMS_JSON);
+        encodeAndTest(tmpDir, "rsa-private.pem", "RS256");
+    }
 
-        URL keyResource = Resources.getResource("rsa-private.pem");
-        Path keyFile = Paths.get(keyResource.toURI());
+    @Test
+    void encodeWithHS256(@TempDir Path tmpDir) throws IOException, URISyntaxException {
+        encodeAndTest(tmpDir, "secret-hs256.bin", "HS256");
+    }
 
-        PrintStream standardOut = System.out;
+    private void encodeAndTest(Path tmpDir, String keyResourceName, String algorithm) throws IOException, URISyntaxException {
+        Path payloadFile = tmpDir.resolve("claims.json");
+        Files.writeString(payloadFile, CLAIMS_JSON);
+
+        Path keyFile = Paths.get(Resources.getResource(keyResourceName).toURI());
+
         ByteArrayOutputStream captor = new ByteArrayOutputStream();
-
+        PrintStream standardOut = System.out;
         try {
-            System.setOut(new java.io.PrintStream(captor));
+            System.setOut(new PrintStream(captor));
 
             int exit = Application.execute(new String[]{
                     "encode",
-                    "--algorithm", "RS256",
+                    "--algorithm", algorithm,
                     "--key", keyFile.toString(),
-                    tmpFile.toString()
+                    payloadFile.toString()
             });
 
             assertThat(exit).isEqualTo(0);
-            System.out.flush();
         } finally {
             System.setOut(standardOut);
         }
@@ -56,5 +64,35 @@ class ApplicationTest {
         String encoded = captor.toString();
         assertThat(encoded).isNotEmpty();
         System.out.println(encoded);
+    }
+
+    @Test
+    void decodeWithHS256(@TempDir Path tmpDir) throws IOException, URISyntaxException {
+        decodeAndTest(tmpDir, JWT_HS256);
+    }
+
+    void decodeAndTest(Path tmpDir, String jwt) throws IOException {
+        Path jwtFile = tmpDir.resolve("jwt");
+        Files.writeString(jwtFile, jwt);
+
+        ByteArrayOutputStream captor = new ByteArrayOutputStream();
+        PrintStream standardOut = System.out;
+
+        try {
+            System.setOut(new PrintStream(captor));
+
+            int exit = Application.execute(new String[]{
+                    "decode",
+                    jwtFile.toString()
+            });
+
+            assertThat(exit).isEqualTo(0);
+        } finally {
+            System.setOut(standardOut);
+        }
+
+        String decoded = captor.toString();
+        assertThat(decoded).isNotEmpty();
+        System.out.println(decoded);
     }
 }
