@@ -17,4 +17,7 @@ public class CommandLineParser {
     private HelpOption helpOption;
     @Option(names = {"-v", "--version"}, versionHelp = true, description = "Print version information and exit.")
     private boolean versionHelpRequested;
+
+    @Option(names = {"--auto-completion-script"}, description = "Output auto-completion script for the specified shell.")
+    private boolean autoCompletionScriptRequested;
 }
