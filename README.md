@@ -3,6 +3,12 @@ JWT utility CLI tool.
 
 ## Compile
 
+### Prerequisites
+
+Install GraalVM and native-image.
+
+### Build native image
+
 $ mvn clean install -Pnative
 
 ## Install
