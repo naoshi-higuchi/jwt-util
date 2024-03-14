@@ -42,7 +42,7 @@ public class Application {
     static int execute(String[] args) {
         if (args.length == 0) {
             commandLine.usage(System.out);
-            return 1;
+            return CommandLine.ExitCode.USAGE;
         }
 
         return commandLine.execute(args);

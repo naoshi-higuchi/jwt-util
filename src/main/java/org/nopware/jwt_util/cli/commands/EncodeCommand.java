@@ -1,19 +1,15 @@
 package org.nopware.jwt_util.cli.commands;
 
 import com.auth0.jwt.algorithms.Algorithm;
-import com.google.common.base.Charsets;
 import lombok.extern.slf4j.Slf4j;
 import org.nopware.jwt_util.*;
 import org.nopware.jwt_util.cli.common.HelpOption;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -35,7 +31,7 @@ public class EncodeCommand implements Callable<Integer> {
     @Option(names = {"--algorithm"}, required = false, description = "The algorithm for encoding.")
     private Alg alg;
 
-    @Option(names = {"--key"}, required = false, description = "The key for signing.")
+    @Option(names = {"--key"}, required = false, description = "The key or secret for signing.")
     private Path key;
 
     @Override
