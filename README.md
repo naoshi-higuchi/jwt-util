@@ -34,14 +34,25 @@ $ jwt-util decode ./jwt --header-only
 ### Encode
 
 ```
-$ jwt-util encode --payload <payloadPath> --key <keyPath> --algorithm <algorithm>
+$ jwt-util encode --algorithm <algorithm> --key <keyPath> <payloadPath>
 
-$ jwt-util encode --payload ./payload.json --key private.pem --algorithm RS256 --header '{"foo":"bar"}'
+$ jwt-util encode --algorithm RS256 --key private.pem ./payload.json
+
+$ jwt-util encode --algorithm RS256 --key private.pem --header '{"foo":"bar"}' ./payload.json
 ```
-
 `typ` and `alg` are added to the header automatically.
 
-### ToDo
+
+### Verify
+
+```
+jwt-util verify --key <keyPath> <jwtPath>
+
+jwt-util verify --key secret-hs256.bin ./jwt
+```
+Exit with 0 if the signature is valid, 1 otherwise.
+
+## ToDo
 
 - Specify 'sun.security.x509.X509CertImpl' in src/main/resources/META-INF/native-image/reflection-config.json. I code it by hand now. It should be generated automatically.
 - Include test resources in the native test image. It is not working now. 'rsa-private.pem' and 'rsa-public.pem' are not found in the native test image and the tests fail. I work around it by skipping the tests in the native image build.
