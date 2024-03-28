@@ -29,10 +29,10 @@ public class IOUtil {
     }
 
     public static byte[] base64Decode(String base64) {
-        return java.util.Base64.getDecoder().decode(base64);
+        return java.util.Base64.getUrlDecoder().decode(base64);
     }
 
     public static String base64Encode(byte[] bytes) {
-        return java.util.Base64.getEncoder().encodeToString(bytes);
+        return java.util.Base64.getUrlEncoder().encodeToString(bytes);
     }
 }
