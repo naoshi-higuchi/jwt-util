@@ -32,10 +32,27 @@ class PSTest {
             return KeyUtil.readPemObject(inputStream);
         }
     }
+
     @Test
     public void testDoSignAndDoVerify() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, SignatureException, InvalidKeyException {
         byte[] privateKeyBytes = loadPemObject("rsa-pss-256-private.pem");
         byte[] publicKeyBytes = loadPemObject("rsa-pss-256-public.pem");
+
+        PS sign = (PS) Algorithms.forSigning(Alg.PS256, privateKeyBytes);
+        PS verify = (PS) Algorithms.forVerifying(Alg.PS256, publicKeyBytes);
+
+        byte[] message = "Hello, world!".getBytes();
+        byte[] signature = sign.doSign(message);
+
+        boolean b = verify.doVerify(message, signature);
+
+        assertTrue(b);
+    }
+
+    @Test
+    public void testKeyCompatibility() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, SignatureException, InvalidKeyException {
+        byte[] privateKeyBytes = loadPemObject("rsa-private.pem");
+        byte[] publicKeyBytes = loadPemObject("rsa-public.pem");
 
         PS sign = (PS) Algorithms.forSigning(Alg.PS256, privateKeyBytes);
         PS verify = (PS) Algorithms.forVerifying(Alg.PS256, publicKeyBytes);

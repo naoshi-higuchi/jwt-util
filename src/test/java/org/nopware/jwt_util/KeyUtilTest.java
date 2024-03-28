@@ -131,14 +131,8 @@ class KeyUtilTest {
 
     @Test
     void readKeyOrSecretWithNone() throws URISyntaxException, IOException {
-        try {
-            KeyUtil.readKeyOrSecret(Alg.NONE, Paths.get(Resources.getResource("secret-hs256.bin").toURI()));
-            fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // expected
-            assertThat(e.getMessage()).startsWith(KeyUtil.EXMSG_UNSUPPORTED_ALGORITHM);
-            System.out.println(e.getMessage());
-        }
+        byte[] none = KeyUtil.readKeyOrSecret(Alg.NONE, Paths.get(Resources.getResource("secret-hs256.bin").toURI()));
+        assertThat(none).isEmpty();
     }
 
     @Test

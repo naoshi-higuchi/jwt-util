@@ -34,7 +34,6 @@ public class KeyUtil {
      * @param keyOrSecretFile the file containing the key or secret
      * @return the key or secret
      * @throws IOException if the file cannot be read, or if the key should be in PEM format and cannot be parsed
-     * @throws IllegalArgumentException if the algorithm is Alg.NONE.
      */
     public static byte[] readKeyOrSecret(Alg alg, Path keyOrSecretFile) throws IOException, IllegalArgumentException {
         switch (alg) {
@@ -46,7 +45,12 @@ public class KeyUtil {
                     return readPemObject(inputStream);
                 }
             }
-            default -> throw new IllegalArgumentException(EXMSG_UNSUPPORTED_ALGORITHM + alg);
+            case NONE -> {
+                return new byte[0];
+            }
+            default -> {
+                throw new IllegalArgumentException(EXMSG_UNSUPPORTED_ALGORITHM + alg);
+            }
         }
     }
 
@@ -114,7 +118,13 @@ public class KeyUtil {
     public static RSAPrivateKey readRSAPSSPrivateKey(byte[] keyInPem) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyInPem);
         KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+
+        try {
+            return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+        } catch (InvalidKeySpecException needFallback) {
+            keyFactory = KeyFactory.getInstance("RSA");
+            return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+        }
     }
 
     /**
@@ -156,7 +166,12 @@ public class KeyUtil {
     public static RSAPublicKey readRSAPSSPublicKey(byte[] keyInPem) throws NoSuchAlgorithmException, InvalidKeySpecException {
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyInPem);
         KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-        return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        try {
+            return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        } catch (InvalidKeySpecException needFallback) {
+            keyFactory = KeyFactory.getInstance("RSA");
+            return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        }
     }
 
     public static byte[] random(int length) {
