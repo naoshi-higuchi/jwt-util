@@ -104,6 +104,20 @@ public class KeyUtil {
     }
 
     /**
+     * Reads an RSA private key for RSASSA-PSS from a PEM (Privacy Enhanced Mail) format.
+     *
+     * @param keyInPem the RSA private key in PEM format
+     * @return the RSA private key
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
+    public static RSAPrivateKey readRSAPSSPrivateKey(byte[] keyInPem) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyInPem);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+    }
+
+    /**
      * Reads an RSA public key.
      *
      * @param keyInPem the RSA public key in PEM format
@@ -129,6 +143,20 @@ public class KeyUtil {
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyInPem);
         KeyFactory keyFactory = KeyFactory.getInstance("EC");
         return (ECPublicKey) keyFactory.generatePublic(keySpec);
+    }
+
+    /**
+     * Reads an RSA public key for RSASSA-PSS from a PEM (Privacy Enhanced Mail) format.
+     *
+     * @param keyInPem
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
+    public static RSAPublicKey readRSAPSSPublicKey(byte[] keyInPem) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyInPem);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+        return (RSAPublicKey) keyFactory.generatePublic(keySpec);
     }
 
     public static byte[] random(int length) {

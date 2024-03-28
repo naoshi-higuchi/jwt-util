@@ -39,6 +39,13 @@ class EncoderAndDecoderTest {
         testEncodeAndDecode("ES512", "ec521-key-pair.pem", "ec521-public.pem");
     }
 
+    @Test
+    void encodeAndDecodeByPSXYZ() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        testEncodeAndDecode("PS256", "rsa-pss-256-private.pem", "rsa-pss-256-public.pem");
+        testEncodeAndDecode("PS384", "rsa-pss-384-private.pem", "rsa-pss-384-public.pem");
+        testEncodeAndDecode("PS512", "rsa-pss-512-private.pem", "rsa-pss-512-public.pem");
+    }
+
     void testEncodeAndDecode(String algorithm, String secretFile) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         URL resource = Resources.getResource(secretFile);
         Path path = Paths.get(resource.getPath());

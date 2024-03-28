@@ -1,6 +1,9 @@
 package org.nopware.jwt_util;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import org.nopware.jwt_util.psalg.PS256;
+import org.nopware.jwt_util.psalg.PS384;
+import org.nopware.jwt_util.psalg.PS512;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -29,15 +32,15 @@ public class Algorithms {
             case HS256 -> Algorithm.HMAC256(key);
             case HS384 -> Algorithm.HMAC384(key);
             case HS512 -> Algorithm.HMAC512(key);
-            case RS256, PS256 -> {
+            case RS256 -> {
                 RSAPrivateKey rsaPrivateKey256 = KeyUtil.readRSAPrivateKey(key);
                 yield Algorithm.RSA256(null, rsaPrivateKey256);
             }
-            case RS384, PS384 -> {
+            case RS384 -> {
                 RSAPrivateKey rsaPrivateKey384 = KeyUtil.readRSAPrivateKey(key);
                 yield Algorithm.RSA384(null, rsaPrivateKey384);
             }
-            case RS512, PS512 -> {
+            case RS512 -> {
                 RSAPrivateKey rsaPrivateKey512 = KeyUtil.readRSAPrivateKey(key);
                 yield Algorithm.RSA512(null, rsaPrivateKey512);
             }
@@ -53,6 +56,18 @@ public class Algorithms {
                 ECPrivateKey ecPrivateKey521 = KeyUtil.readECPrivateKey(key);
                 yield Algorithm.ECDSA512(null, ecPrivateKey521);
             }
+            case PS256 -> {
+                RSAPrivateKey rsaPrivateKey256 = KeyUtil.readRSAPSSPrivateKey(key);
+                yield new PS256(null, rsaPrivateKey256);
+            }
+            case PS384 -> {
+                RSAPrivateKey rsaPrivateKey384 = KeyUtil.readRSAPSSPrivateKey(key);
+                yield new PS384(null, rsaPrivateKey384);
+            }
+            case PS512 -> {
+                RSAPrivateKey rsaPrivateKey512 = KeyUtil.readRSAPSSPrivateKey(key);
+                yield new PS512(null, rsaPrivateKey512);
+            }
             case NONE -> Algorithm.none();
         };
     }
@@ -61,15 +76,15 @@ public class Algorithms {
             case HS256 -> Algorithm.HMAC256(key);
             case HS384 -> Algorithm.HMAC384(key);
             case HS512 -> Algorithm.HMAC512(key);
-            case RS256, PS256 -> {
+            case RS256 -> {
                 RSAPublicKey rsaPublicKey256 = KeyUtil.readRSAPublicKey(key);
                 yield Algorithm.RSA256(rsaPublicKey256, null);
             }
-            case RS384, PS384 -> {
+            case RS384 -> {
                 RSAPublicKey rsaPublicKey384 = KeyUtil.readRSAPublicKey(key);
                 yield Algorithm.RSA384(rsaPublicKey384, null);
             }
-            case RS512, PS512 -> {
+            case RS512 -> {
                 RSAPublicKey rsaPublicKey512 = KeyUtil.readRSAPublicKey(key);
                 yield Algorithm.RSA512(rsaPublicKey512, null);
             }
@@ -84,6 +99,18 @@ public class Algorithms {
             case ES512 -> {
                 ECPublicKey ecPublicKey521 = KeyUtil.readECPublicKey(key);
                 yield Algorithm.ECDSA512(ecPublicKey521, null);
+            }
+            case PS256 -> {
+                RSAPublicKey rsaPublicKey256 = KeyUtil.readRSAPSSPublicKey(key);
+                yield new PS256(rsaPublicKey256, null);
+            }
+            case PS384 -> {
+                RSAPublicKey rsaPublicKey384 = KeyUtil.readRSAPSSPublicKey(key);
+                yield new PS384(rsaPublicKey384, null);
+            }
+            case PS512 -> {
+                RSAPublicKey rsaPublicKey512 = KeyUtil.readRSAPSSPublicKey(key);
+                yield new PS512(rsaPublicKey512, null);
             }
             case NONE -> Algorithm.none();
         };
