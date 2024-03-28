@@ -10,6 +10,9 @@ import java.net.URL;
 import java.util.Properties;
 
 public class Application {
+    static {
+        System.setProperty("slf4j.internal.verbosity", "warn");
+    }
     private static String loadImageName() {
         URL configUrl = Resources.getResource("config.properties");
         try {
