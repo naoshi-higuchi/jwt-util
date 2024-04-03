@@ -55,7 +55,7 @@ class ApplicationTest {
 
             int exit = Application.execute(new String[]{
                     "encode",
-                    "--algorithm", algorithm,
+                    "--alg", algorithm,
                     "--key", keyFile.toString(),
                     payloadFile.toString()
             });
