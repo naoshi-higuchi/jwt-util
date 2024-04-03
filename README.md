@@ -79,6 +79,17 @@ Exit with 0 if the signature is valid, 1 otherwise.
 - PS512
 - none
 
+### Tips
+
+#### Read from stdin
+
+Use '-' as the file path to read from stdin.
+
+```
+$ cat ./jwt | jwt-util decode -
+$ cat ./claims.json | jwt-util encode - --alg RS256 --key rsa-private.pem
+```
+
 ## ToDo
 
 - Include test resources in the native test image. It is not working now. 'rsa-private.pem' and 'rsa-public.pem' are not found in the native test image and the tests fail. I work around it by skipping the tests in the native image build.
