@@ -22,17 +22,17 @@ public class EncodeCommand implements Callable<Integer> {
     @Mixin
     private HelpOption helpOption;
 
-    @Parameters(index = "0", arity = "0..1", description = "The payload file to encode.")
+    @Parameters(index = "0", arity = "1", description = "The payload file to encode.")
     private Path payloadPath;
 
     @Option(names = {"--header"}, required = false, description = "The header JSON string.")
     private String header;
 
-    @Option(names = {"--algorithm"}, required = false, description = "The algorithm for encoding.")
+    @Option(names = {"--alg"}, required = false, description = "The algorithm for encoding.")
     private Alg alg;
 
     @Option(names = {"--key"}, required = false, description = "The key or secret for signing.")
-    private Path key;
+    private Path keyPath;
 
     @Override
     public Integer call() {
@@ -43,7 +43,7 @@ public class EncodeCommand implements Callable<Integer> {
 
             String payload = IOUtil.readStringFromFileOrStdin(payloadPath);
 
-            byte[] keyOrSecret = KeyUtil.readKeyOrSecret(alg, key);
+            byte[] keyOrSecret = KeyUtil.readKeyOrSecret(alg, keyPath);
             Algorithm algorithm = Algorithms.forSigning(alg, keyOrSecret);
             String encode = Encoder.encode(Optional.ofNullable(header), payload, algorithm);
             System.out.write(encode.getBytes());

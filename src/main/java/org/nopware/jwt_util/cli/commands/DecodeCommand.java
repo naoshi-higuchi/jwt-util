@@ -17,11 +17,8 @@ public class DecodeCommand implements Callable<Integer> {
     @Mixin
     private HelpOption helpOption;
 
-    @Parameters(index = "0", arity = "0..1", description = "The JWT file to decode.")
+    @Parameters(index = "0", arity = "1", description = "The JWT file to decode.")
     private Path jwtPath;
-
-    //@Option(names = {"-t", "--token"}, required = true, description = "The JWT token string to decode.")
-    //private String token;
 
     @ArgGroup(exclusive = true, multiplicity = "0..1")
     private OnlyOption onlyOption;

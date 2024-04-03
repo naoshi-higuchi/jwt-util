@@ -30,11 +30,11 @@ public class VerifyCommand implements Callable<Integer> {
     @Mixin
     private HelpOption helpOption;
 
-    @Parameters(index = "0", arity = "0..1", description = "The JWT file to decode.")
+    @Parameters(index = "0", arity = "1", description = "The JWT file to decode.")
     private Path jwtPath;
 
     @Option(names = {"--key"}, required = true, description = "The key or secret for verifying.")
-    private Path key;
+    private Path keyPath;
 
     @Override
     public Integer call() throws Exception {
@@ -46,7 +46,7 @@ public class VerifyCommand implements Callable<Integer> {
             Header header = objectMapper.readValue(headerStr, Header.class);
 
             Alg alg = Alg.valueOf(header.getAlg());
-            byte[] keyOrSecret = alg == Alg.NONE ? null : KeyUtil.readKeyOrSecret(alg, key);
+            byte[] keyOrSecret = alg == Alg.NONE ? null : KeyUtil.readKeyOrSecret(alg, keyPath);
             Algorithm algorithm = Algorithms.forVerifying(alg, keyOrSecret);
 
             try {
