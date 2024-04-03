@@ -21,7 +21,10 @@ public class IOUtil {
     }
 
     public static byte[] readAllBytesFromFileOrStdin(@Nullable Path path) throws IOException {
-        if (path == null || path.toString().equals("-")) {
+        if (path == null) {
+            return System.in.readAllBytes();
+        } else if (path.toString().equals("-") && Files.notExists(path)) {
+            // "-" is a special path that means read from stdin.
             return System.in.readAllBytes();
         } else {
             return Files.readAllBytes(path);

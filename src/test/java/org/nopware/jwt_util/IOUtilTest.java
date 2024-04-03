@@ -60,6 +60,24 @@ class IOUtilTest {
         }
     }
 
+    @Test
+    public void readAllByteFromFileOrStdinWithDashPath_dashFileExists() throws IOException {
+        final String EXPECTED = "readAllByteFromFileOrStdinWithDashPath_dashFileExists";
+
+        // This test case is reading the file "-" exists in the current directory.
+        // Don't use @TempDir because it will create a dashFile with unnecessary leading path, such as "/foobarbaz/-".
+        Path dashFile = Paths.get("-");
+
+        try {
+            Files.writeString(dashFile, EXPECTED); // "-" path
+
+            byte[] bytes = IOUtil.readAllBytesFromFileOrStdin(dashFile);
+            assertThat(bytes).isEqualTo(EXPECTED.getBytes());
+        } finally {
+            Files.deleteIfExists(dashFile);
+        }
+    }
+
     /**
      * Test vectors from <a href="https://tools.ietf.org/html/rfc4648#section-10">rfc4648#section-10</a>
      */
