@@ -35,13 +35,6 @@ It has no installer. Just copy the binary `target/jwt-util` to your desired loca
 $ jwt-util --help
 ```
 
-### Auto completion
-
-```
-$ source <(jwt-util --auto-completion-script)
-$ echo "source <(jwt-util --auto-completion-script)" >> ~/.bashrc
-```
-
 ### Decode
 
 ```
@@ -98,6 +91,13 @@ Use '-' as the file path to read from stdin.
 ```
 $ cat ./jwt | jwt-util decode -
 $ cat ./claims.json | jwt-util encode - --alg RS256 --key rsa-private.pem
+```
+
+#### Auto completion
+
+```
+$ source <(jwt-util --auto-completion-script)
+$ echo "source <(jwt-util --auto-completion-script)" >> ~/.bashrc
 ```
 
 ## ToDo
