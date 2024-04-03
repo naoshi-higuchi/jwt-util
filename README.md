@@ -1,6 +1,16 @@
 # jwt-util
 JWT utility CLI tool.
 
+It can encode, decode, and verify JWT.
+
+## Quick start
+
+```
+$ jwt-util encode ./payload.json --alg RS256 --key ./rsa-private.pem > ./jwt
+$ jwt-util decode ./jwt
+$ jwt-util verify ./jwt --key ./rsa-public.pem
+```
+
 ## Compile
 
 ### Prerequisites
