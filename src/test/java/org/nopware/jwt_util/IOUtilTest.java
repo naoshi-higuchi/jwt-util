@@ -35,7 +35,7 @@ class IOUtilTest {
     }
 
     @Test
-    public void readAllBytesFromFileOrStdinWithNullPath() throws IOException {
+    void readAllBytesFromFileOrStdinWithNullPath() throws IOException {
         final InputStream stdin = System.in;
         final String EXPECTED = "readAllBytesFromFileOrStdinWithNullPath";
         try (ByteArrayInputStream in = new ByteArrayInputStream(EXPECTED.getBytes());) {
@@ -48,7 +48,7 @@ class IOUtilTest {
     }
 
     @Test
-    public void readAllBytesFromFileOrStdinWithDashPath() throws IOException {
+    void readAllBytesFromFileOrStdinWithDashPath() throws IOException {
         final InputStream stdin = System.in;
         final String EXPECTED = "readAllBytesFromFileOrStdinWithDashPath";
         try (ByteArrayInputStream in = new ByteArrayInputStream(EXPECTED.getBytes());) {
@@ -61,7 +61,7 @@ class IOUtilTest {
     }
 
     @Test
-    public void readAllByteFromFileOrStdinWithDashPath_dashFileExists() throws IOException {
+    void readAllByteFromFileOrStdinWithDashPath_dashFileExists() throws IOException {
         final String EXPECTED = "readAllByteFromFileOrStdinWithDashPath_dashFileExists";
 
         // This test case is reading the file "-" exists in the current directory.
