@@ -64,10 +64,72 @@ class KeyUtilTest {
     }
 
     @Test
+    void readRSAPSSPrivateKey() {
+        try (InputStream inputStream = getResource("rsa-pss-256-private.pem")) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            RSAPrivateKey rsaPrivateKey = KeyUtil.readRSAPSSPrivateKey(keyInPem);
+            assertNotNull(rsaPrivateKey);
+            assertEquals("RSASSA-PSS", rsaPrivateKey.getAlgorithm());
+            assertEquals("PKCS#8", rsaPrivateKey.getFormat());
+            assertEquals(2048, rsaPrivateKey.getModulus().bitLength());
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    /**
+     * KeyUtil.readRSAPSSPrivateKey can read RSA private keys.
+     */
+    @Test
+    void readRSAPSSPrivateKey_fallback() {
+        try (InputStream inputStream = getResource("rsa-private.pem")) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            RSAPrivateKey rsaPrivateKey = KeyUtil.readRSAPSSPrivateKey(keyInPem);
+            assertNotNull(rsaPrivateKey);
+            assertEquals("RSA", rsaPrivateKey.getAlgorithm());
+            assertEquals("PKCS#8", rsaPrivateKey.getFormat());
+            assertEquals(2048, rsaPrivateKey.getModulus().bitLength());
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
     void readRSAPublicKey() {
         try (InputStream inputStream = getResource("rsa-public.pem")) {
             byte[] keyInPem = KeyUtil.readPemObject(inputStream);
             RSAPublicKey rsaPublicKey = KeyUtil.readRSAPublicKey(keyInPem);
+            assertNotNull(rsaPublicKey);
+            assertEquals("RSA", rsaPublicKey.getAlgorithm());
+            assertEquals("X.509", rsaPublicKey.getFormat());
+            assertEquals(2048, rsaPublicKey.getModulus().bitLength());
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
+    void readRSAPSSPublicKey() {
+        try (InputStream inputStream = getResource("rsa-pss-256-public.pem")) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            RSAPublicKey rsaPublicKey = KeyUtil.readRSAPSSPublicKey(keyInPem);
+            assertNotNull(rsaPublicKey);
+            assertEquals("RSASSA-PSS", rsaPublicKey.getAlgorithm());
+            assertEquals("X.509", rsaPublicKey.getFormat());
+            assertEquals(2048, rsaPublicKey.getModulus().bitLength());
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    /**
+     * KeyUtil.readRSAPSSPublicKey can read RSA public keys.
+     */
+    @Test
+    void readRSAPSSPublicKey_fallback() {
+        try (InputStream inputStream = getResource("rsa-public.pem")) {
+            byte[] keyInPem = KeyUtil.readPemObject(inputStream);
+            RSAPublicKey rsaPublicKey = KeyUtil.readRSAPSSPublicKey(keyInPem);
             assertNotNull(rsaPublicKey);
             assertEquals("RSA", rsaPublicKey.getAlgorithm());
             assertEquals("X.509", rsaPublicKey.getFormat());
