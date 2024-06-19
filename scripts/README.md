@@ -8,7 +8,9 @@ Not for jwt-util users.
 Generate keypair and secret for testing.
 
 These files are not committed to this repository.
-So you need to generate them before running tests or skip tests with -DskipTests=true option.
+So you need to generate them before running tests.
+
+If you do NOT want to run tests but to build, skip tests with -DskipTests=true option.
 
 ```bash
 $ sh ./generate-keypair.sh

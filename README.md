@@ -100,6 +100,11 @@ $ source <(jwt-util --auto-completion-script)
 $ echo "source <(jwt-util --auto-completion-script)" >> ~/.bashrc
 ```
 
+#### Test
+
+If you want to run `mvn test`, you need to generate keypair and secret.
+Refer to the [scripts/README.md](./scripts/README.md).
+
 ## ToDo
 
 - Include test resources in the native test image. It is not working now. 'rsa-private.pem' and 'rsa-public.pem' are not found in the native test image and the tests fail. I work around it by skipping the tests in the native image build.
