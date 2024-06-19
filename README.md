@@ -50,9 +50,9 @@ $ jwt-util decode ./jwt --header-only
 ```
 $ jwt-util encode --alg <algorithm> --key <keyPath> <payloadPath>
 
-$ jwt-util encode --alg RS256 --key private.pem ./payload.json
+$ jwt-util encode --alg RS256 --key ./private.pem ./payload.json
 
-$ jwt-util encode --alg RS256 --key private.pem --header '{"foo":"bar"}' ./payload.json
+$ jwt-util encode --alg RS256 --key ./private.pem --header '{"foo":"bar"}' ./payload.json
 ```
 `typ` and `alg` are added to the header automatically.
 
@@ -62,7 +62,7 @@ $ jwt-util encode --alg RS256 --key private.pem --header '{"foo":"bar"}' ./paylo
 ```
 jwt-util verify --key <keyPath> <jwtPath>
 
-jwt-util verify --key secret-hs256.bin ./jwt
+jwt-util verify --key ./secret-hs256.bin ./jwt
 ```
 Exit with 0 if the signature is valid, 1 otherwise.
 
@@ -90,7 +90,7 @@ Use '-' as the file path to read from stdin.
 
 ```
 $ cat ./jwt | jwt-util decode -
-$ cat ./claims.json | jwt-util encode - --alg RS256 --key rsa-private.pem
+$ cat ./payload.json | jwt-util encode - --alg RS256 --key ./rsa-private.pem
 ```
 
 #### Auto completion
